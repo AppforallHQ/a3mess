@@ -8,10 +8,17 @@ config = require('./configs/config');
 app = express();
 queue = kue.createQueue();
 
-app.get('/', function(req, res){
+app.get('/', function(req, res, next){
     var job, query, data;
 
     query = req.query;
+
+    if(query.to.length != 11 || isNaN(query.to) || query.body.length > 400){
+        // Return bad request response
+        res.status(400);
+        res.send({done: false, msg: 'bad value'});
+        return;
+    }
 
     // Job data
     data = {
