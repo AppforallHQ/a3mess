@@ -32,7 +32,9 @@ app.get('/', function(req, res){
     };
 
     // Initialize job
-    job = queue.create("send-sms", data).save(save_sms);
+    job = queue.create("send-sms", data)
+        .attempts(5)
+        .save(save_sms);
 
 });
 

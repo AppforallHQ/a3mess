@@ -62,12 +62,13 @@ var send_sms = function(data, done){
                     }
                 });
             }
+            // Job done
+            done();
         } else {
-            console.log("I failed");
+            // Request failed
+            done(new Error("Failed to send message: " + error));
         }
     }).form(req_data);
-
-    done();
 };
 
 var check_status = function(data, done){
@@ -105,11 +106,13 @@ var check_status = function(data, done){
                 });
             }
             console.log("Change message status to " + body);
+
+            // Job done
+            done();
         } else {
-            console.log("I failed");
+            done(new Error("Failed to check status: " + error));
         }
     }).form(req_data);
 
     console.log("Check status for message " + data.mid);
-    done();
 };
