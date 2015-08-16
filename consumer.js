@@ -1,12 +1,15 @@
 // Initialization
-var kue, config, request, queue, magfa;
+var kue, bunyan, log, config, request, queue, magfa;
 
 kue = require('kue');
 request = require('request');
+bunyan = require('bunyan');
 config = require('./configs/config');
 magfa = config.magfa;
 
 queue = kue.createQueue();
+
+log = bunyan.createLogger({name: 'A3Mess Consumer'});
 
 // Setup analytics
 var Analytics = require('analytics-node');
@@ -37,7 +40,7 @@ var send_sms = function(data, done){
 
     req = request.post(endpoint, function(error, response, body){
         if(!error && response.statusCode === 200){
-            console.log("Add messsage " + body + " to check status queue");
+            log.info("Add messsage " + body + " to check status queue");
 
             var msg_data = {
                 title: "SMS: " + body + " to: " + data.user_id + " with number: " + data.to,
@@ -66,7 +69,9 @@ var send_sms = function(data, done){
             done();
         } else {
             // Request failed
-            done(new Error("Failed to send message: " + error));
+            var msg = "Failed to send message: " + error;
+            log.warn(msg);
+            done(new Error(msg));
         }
     }).form(req_data);
 };
@@ -105,14 +110,18 @@ var check_status = function(data, done){
                     }
                 });
             }
-            console.log("Change message status to " + body);
+            log.info("Change message status to " + body);
 
             // Job done
             done();
         } else {
-            done(new Error("Failed to check status: " + error));
+            var msg = "Failed to check status: " + error;
+            log.warn(msg);
+            done(new Error(msg));
         }
     }).form(req_data);
 
-    console.log("Check status for message " + data.mid);
+    log.info("Check status for message " + data.mid);
 };
+
+log.info("Consumer started...");

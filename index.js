@@ -1,22 +1,27 @@
-var kue, http, express, config, app, queue;
+var kue, http, bunyan, express, config, app, queue, log;
 
 kue = require('kue');
 http = require('http'),
 express = require('express');
+bunyan = require('bunyan');
 config = require('./configs/config');
 
 app = express();
 queue = kue.createQueue();
+
+log = bunyan.createLogger({name: 'A3Mess API'});
 
 app.get('/', function(req, res, next){
     var job, query, data;
 
     query = req.query;
 
-    if(query.to.length != 11 || isNaN(query.to) || query.body.length > 400){
+    if(!(query.to && query.body) ||
+       (query.to.length != 11 || isNaN(query.to) || query.body.length > 400)){
         // Return bad request response
         res.status(400);
         res.send({done: false, msg: 'bad value'});
+        log.warn("Bad value, to: " + query.to + " body: " + query.body);
         return;
     }
 
@@ -50,7 +55,7 @@ app.listen(config.port);
 if(config.ui_port){
     var ui_port = config.ui_port;
     kue.app.listen(ui_port);
-    console.log("Web interface started at port: " + ui_port);
+    log.info("Web interface started at port: " + ui_port);
 }
 
-console.log("Server started at port: " + config.port);
+log.info("Server started at port: " + config.port);

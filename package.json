@@ -19,6 +19,7 @@
   "homepage": "https://bitbucket.org//a3mess#readme",
   "dependencies": {
     "analytics-node": "^1.2.2",
+    "bunyan": "^1.4.0",
     "express": "^4.13.3",
     "kue": "^0.9.4",
     "request": "^2.60.0"
