@@ -35,3 +35,7 @@ Actual worker which will process message requests.
 ### Web UI:
 A simple web UI provided by `kue` to monitor system. Available on port 38083 by default (editable in configs/config.js)
 If you want to disable it just set its related (`config.status_delay `) value to `null` in `configs/config.js`
+
+## Resources
+
+- [Magfa document](http://messaging.magfa.com/docs/manual/httpService-manual-940326.pdf)
