@@ -1,8 +1,14 @@
-var config = {};
+var app, http, config, express;
 
-config.port = process.env.npm_package_config_port || 3883;
+http = require('http'),
+express = require('express');
+config = require('./configs/config');
 
-config.magfa = {domain: "magfa",
-                from: "",
-                username: "",
-                password: ""};
+app = express();
+
+app.get('/:to/:body', function(req, res){
+    res.send({id: req.params.to});
+});
+
+app.listen(config.port);
+console.log("Server started at port: " + config.port);
