@@ -15,6 +15,7 @@ app.get('/', function(req, res){
 
     // Job data
     data = {
+        title: "To: " + query.to,
         to: query.to,
         body: query.body,
         user_id: query.user_id
@@ -36,4 +37,11 @@ app.get('/', function(req, res){
 });
 
 app.listen(config.port);
+
+if(config.ui_port){
+    var ui_port = config.ui_port;
+    kue.app.listen(ui_port);
+    console.log("Web interface started at port: " + ui_port);
+}
+
 console.log("Server started at port: " + config.port);

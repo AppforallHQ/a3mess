@@ -38,7 +38,13 @@ var send_sms = function(data, done){
     req = request.post(endpoint, function(error, response, body){
         if(!error && response.statusCode === 200){
             console.log("Add messsage " + body + " to check status queue");
-            var msg_data = {mid: body, user_id: data.user_id};
+
+            var msg_data = {
+                title: "SMS: " + body + " to: " + data.user_id + " with number: " + data.to,
+                mid: body,
+                user_id: data.user_id
+            };
+
             queue.create("check-status", msg_data).save();
 
             // If there is a user_id, track status
@@ -48,7 +54,7 @@ var send_sms = function(data, done){
                     event: 'SMS Sent',
                     properties: {
                         message_id: data.mid,
-                        status: "Message in queue" 
+                        status: "Message in queue"
                     }
                 });
             }
@@ -74,7 +80,7 @@ var check_status = function(data, done){
     req = request.post(endpoint, function(error, response, body){
         if(!error && response.statusCode === 200){
             var status;
-           
+
             if(body == 1){
                 status = "Successful";
             } else if(body in [0, 2, 8, 16]){
