@@ -8,20 +8,31 @@ config = require('./configs/config');
 app = express();
 queue = kue.createQueue();
 
-app.get('/:to/:body', function(req, res){
-    var job, params;
+app.get('/', function(req, res){
+    var job, query, data;
 
-    params = req.params;
-    job = queue.create("send-sms", {
-        to: params.to,
-        body: params.body
-    }).save(function(err){
+    query = req.query;
+
+    // Job data
+    data = {
+        to: query.to,
+        body: query.body,
+        user_id: query.user_id
+    };
+
+    // Callback to handle job save process
+    var save_sms = function(err){
         if(!err){
-            res.send({done: true, msg:"SMS to " + params.to + " added with job id: " + job.id});
+            res.send({done: true,
+                      msg:"SMS to " + query.to + " added with job id: " + job.id});
         } else {
             res.send({done: false, msg: err});
         }
-    });
+    };
+
+    // Initialize job
+    job = queue.create("send-sms", data).save(save_sms);
+
 });
 
 app.listen(config.port);
