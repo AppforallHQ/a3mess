@@ -1,0 +1,23 @@
+{
+  "name": "a3mess",
+  "version": "0.1.0",
+  "description": "An SMS API provider which process jobs using Magfa webservice",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org//a3mess.git"
+  },
+  "keywords": [
+    "SMS",
+    "API"
+  ],
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org//a3mess#readme",
+  "dependencies": {
+    "kue": "^0.9.4"
+  }
+}
