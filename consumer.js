@@ -45,7 +45,11 @@ var send_sms = function(data, done){
                 user_id: data.user_id
             };
 
-            queue.create("check-status", msg_data).save();
+            queue.create("check-status", msg_data)
+                .attempts(5)
+                .delay(config.status_delay)
+                .backoff( {type:'exponential'} )
+                .save();
 
             // If there is a user_id, track status
             if(data.user_id){
@@ -96,7 +100,7 @@ var check_status = function(data, done){
                     event: 'SMS Sent',
                     properties: {
                         message_id: data.mid,
-                        status: status 
+                        status: status
                     }
                 });
             }

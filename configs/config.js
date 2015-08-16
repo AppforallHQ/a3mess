@@ -9,4 +9,6 @@ config.magfa = {domain: "magfa",
                 password: "",
                 endpoint: "http://sms.magfa.com/magfaHttpService"};
 
+// One minute delay to check message status
+config.status_delay = 60 * 1000;
 module.exports = config;
