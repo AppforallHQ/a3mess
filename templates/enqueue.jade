@@ -1,0 +1,53 @@
+|<?xml version="1.0" encoding="UTF-8"?>
+SOAP-ENV:Envelope(xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://magfa.com/soap/SOAPSmsQueue" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/")
+  SOAP-ENV:Body
+    ns1:enqueue
+      domain(xsi:type="xsd:string").
+        #{domainName}
+      messageBodies(SOAP-ENC:arrayType="xsd:string[1]" xsi:type="SOAP-ENC:Array")
+        each message in messageBodies
+          item(xsi:type="xsd:string"). 
+            #{message}
+      recipientNumbers(SOAP-ENC:arrayType="xsd:string[2]" xsi:type="SOAP-ENC:Array")
+        each recipient in recipientNumbers
+          item(xsi:type="xsd:string").
+            #{recipient}
+      senderNumbers(SOAP-ENC:arrayType="xsd:string[1]" xsi:type="SOAP-ENC:Array")
+        each sender in senderNumbers
+          item(xsi:type="xsd:string").
+            #{sender}
+      if encodings 
+        encodings(xsi:nil="true" xsi:type="SOAP-ENC:Array")
+          each encoding in encodings 
+            item(xsi:type="xsd:string").
+              #{encoding}
+      //- else
+      //-   encodings(xsi:nil="true" xsi:type="SOAP-ENC:Array")/
+      if udhs
+        udhs(xsi:nil="true" xsi:type="SOAP-ENC:Array")
+          each udh in udhs
+            item(xsi:type="xsd:string").
+              #{udh}
+      //- else
+      //-   udhs(xsi:nil="true" xsi:type="SOAP-ENC:Array")/
+      if messageClasses
+        messageClasses(xsi:nil="true" xsi:type="SOAP-ENC:Array")
+          each mclass in messageClasses
+            item(xsi:type="xsd:long").
+              #{mclass}
+      //- else
+      //-   messageClasses(xsi:nil="true" xsi:type="SOAP-ENC:Array")/
+      if priorities
+        priorities(xsi:type="SOAP-ENC:Array")
+          each priority in priorities
+            item(xsi:type="xsd:long").
+              #{priority}
+      //- else
+      //-   priorities(xsi:type="SOAP-ENC:Array")/
+      if checkingMessageIds
+        checkingMessageIds(SOAP-ENC:arrayType="xsd:long[2]" xsi:type="SOAP-ENC:Array")
+          each checkId in checkingMessageIds
+            item(xsi:type="xsd:long").
+              #{checkId}
+      //- else
+      //-   checkingMessageIds(SOAP-ENC:arrayType="xsd:long[2]" xsi:type="SOAP-ENC:Array")/

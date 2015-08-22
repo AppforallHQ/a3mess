@@ -1,0 +1,35 @@
+<!-- enqueue -->
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <soapenv:Body>
+  <ns1:enqueueResponse soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns1="http://magfa.com/soap/SOAPSmsQueue">
+   <ns1:enqueueReturn xsi:type="soapenc:Array" soapenc:arrayType="xsd:long[1]" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+    <item>22946775516</item>
+   </ns1:enqueueReturn>
+  </ns1:enqueueResponse>
+ </soapenv:Body>
+</soapenv:Envelope>
+
+
+<!-- getCredit -->
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <soapenv:Body>
+  <ns1:getCreditResponse soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns1="http://magfa.com/soap/SOAPSmsQueue">
+   <ns1:getCreditReturn xsi:type="xsd:float">1497960.0</ns1:getCreditReturn>
+  </ns1:getCreditResponse>
+ </soapenv:Body>
+</soapenv:Envelope>
+
+
+<!-- getRealMessageStatuses -->
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <soapenv:Body>
+  <ns1:getRealMessageStatusesResponse soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns1="http://magfa.com/soap/SOAPSmsQueue">
+   <ns1:getRealMessageStatusesReturn xsi:type="soapenc:Array" soapenc:arrayType="xsd:int[1]" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+    <item>1</item>
+   </ns1:getRealMessageStatusesReturn>
+  </ns1:getRealMessageStatusesResponse>
+ </soapenv:Body>
+</soapenv:Envelope>
