@@ -7,28 +7,45 @@ bunyan = require('bunyan');
 config = require('./configs/config');
 magfa = config.magfa;
 
+// Initializ queue
 queue = kue.createQueue();
 
+// Setup logger
 log = bunyan.createLogger({name: 'A3Mess Consumer'});
 
 // Setup analytics
 var Analytics = require('analytics-node');
-var analytics = new Analytics('YOUR_WRITE_KEY');
+var analytics = new Analytics(config.segment_key);
 
+// Define processors
 queue.process("send-sms", function(job, done){
-    send_sms(job.data, done);
+    sendSMS(job.data, done);
 });
 
 queue.process("check-status", function(job, done){
-    check_status(job.data, done);
+    checkStatus(job.data, done);
 });
 
-var send_sms = function(data, done){
+var addToCheckStatus = function(body, data){
+    var msg_data = {
+        title: "SMS: " + body + " to: " + data.user_id + " with number: " + data.to,
+        mid: body,
+        user_id: data.user_id
+    };
+
+    queue.create("check-status", msg_data)
+        .attempts(5)
+        .delay(config.status_delay)
+        .backoff( {type:'exponential'} )
+        .save();
+};
+
+var sendSMS = function(data, done){
     var req, endpoint, req_data;
 
-    // Very stupid hack! Magfa can't recognize string service name so
+    // Very bad hack! Magfa can't recognize string service name so
     // service = "enqueu" will return error 25 and I hardcoded it :|
-    endpoint = magfa.endpoint + "?service=enqueue";
+    endpoint = magfa.http.endpoint + "?service=enqueue";
     req_data = {
         domain: magfa.domain,
         username: magfa.username,
@@ -41,29 +58,11 @@ var send_sms = function(data, done){
     req = request.post(endpoint, function(error, response, body){
         if(!error && response.statusCode === 200){
             log.info("Add messsage " + body + " to check status queue");
-
-            var msg_data = {
-                title: "SMS: " + body + " to: " + data.user_id + " with number: " + data.to,
-                mid: body,
-                user_id: data.user_id
-            };
-
-            queue.create("check-status", msg_data)
-                .attempts(5)
-                .delay(config.status_delay)
-                .backoff( {type:'exponential'} )
-                .save();
+            addToCheckStatus(body, data);
 
             // If there is a user_id, track status
             if(data.user_id){
-                analytics.track({
-                    userId: data.user_id,
-                    event: 'SMS Sent',
-                    properties: {
-                        message_id: data.mid,
-                        status: "Message in queue"
-                    }
-                });
+                changeAnalytics(data.user_id, data.mid, "Message in queue");
             }
             // Job done
             done();
@@ -76,10 +75,21 @@ var send_sms = function(data, done){
     }).form(req_data);
 };
 
-var check_status = function(data, done){
+var changeAnalytics = function(userId, messageId, status){
+    analytics.track({
+        userId: userId,
+        event: 'SMS Sent',
+        properties: {
+            message_id: messageId,
+            status: status
+        }
+    });
+};
+
+var checkStatus = function(data, done){
     var req, endpoint, req_data;
 
-    endpoint = magfa.endpoint + "?service=getRealMessageStatus";
+    endpoint = magfa.http.endpoint + "?service=getRealMessageStatus";
     req_data = {
         domain: magfa.domain,
         username: magfa.username,
@@ -101,14 +111,7 @@ var check_status = function(data, done){
 
             // If there is a user_id, track status
             if(data.user_id){
-                analytics.track({
-                    userId: data.user_id,
-                    event: 'SMS Sent',
-                    properties: {
-                        message_id: data.mid,
-                        status: status
-                    }
-                });
+                changeAnalytics(data.user_id, data.mid, status);
             }
             log.info("Change message status to " + body);
 

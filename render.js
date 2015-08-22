@@ -1,16 +1,16 @@
-var jade = require("jade");
+var jade, config;
+
+jade = require("jade");
+config = require('./configs/config.js');
+
 
 var actions = function(){
     this.data = {
-        domainName: "magfa",
-        senderNumbers: [""]
+        domainName: config.magfa.domain,
+        senderNumbers: [config.magfa.from]
     };
 
-    this.files = {
-        enqueue: "templates/enqueue.jade",
-        getRealMessageStatuses: "templates/getRealMessageStatuses.jade",
-        getCredit: "templates/getCredit.jade"
-    };
+    this.files = config.soapTemplates;
 
     this.options = {
         // pretty: true
