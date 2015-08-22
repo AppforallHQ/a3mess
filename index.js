@@ -46,6 +46,7 @@ app.get('/', function(req, res, next){
     // Initialize job
     job = queue.create("send-sms", data)
         .attempts(5)
+        .backoff( {type:'exponential'} )
         .save(save_sms);
 
 });

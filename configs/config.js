@@ -24,7 +24,7 @@ config.http.statuses = {
 
 config.soap = {};
 config.soap.endpoint = 'http://sms.magfa.com/services/urn:SOAPSmsQueue?wsdl';
-config.soap.Templates = {
+config.soap.templates = {
     enqueue: "templates/enqueue.jade",
     getRealMessageStatuses: "templates/getRealMessageStatuses.jade",
     getCredit: "templates/getCredit.jade"

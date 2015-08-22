@@ -10,7 +10,7 @@ var actions = function(){
         senderNumbers: [config.magfa.from]
     };
 
-    this.files = config.soapTemplates;
+    this.files = config.soap.templates;
 
     this.options = {
         // pretty: true
