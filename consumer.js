@@ -3,7 +3,7 @@ var kue, bunyan, log, config, request, queue, magfa, parser, render;
 
 kue = require('kue');
 request = require('request');
-bunyan = require('bunyan');
+// bunyan = require('bunyan');
 parser = require('xml2json');
 render = require("./render.js");
 config = require('./configs/config');
@@ -13,7 +13,7 @@ magfa = config.magfa;
 queue = kue.createQueue();
 
 // Setup logger
-log = bunyan.createLogger({name: 'A3Mess Consumer'});
+// log = bunyan.createLogger({name: 'A3Mess Consumer'});
 
 // Setup analytics
 var Analytics = require('analytics-node');
@@ -70,7 +70,7 @@ var sendSMS = function(data, done){
 
         req = request.post(endpoint, function(error, response, body){
             if(!error && response.statusCode === 200){
-                log.info("Add messsage " + body + " to check status queue");
+                console.log("Add messsage " + body + " to check status queue");
                 addToCheckStatus(body, data);
 
                 // If there is a user_id, track status
@@ -82,7 +82,7 @@ var sendSMS = function(data, done){
             } else {
                 // Request failed
                 var msg = "Failed to send message: " + error;
-                log.warn(msg);
+                console.log(msg);
                 done(new Error(msg));
             }
         }).form(req_data);
@@ -99,11 +99,11 @@ var sendSMS = function(data, done){
                             throw "Error " + messageId + " happend";
                         };
                     } catch(err){
-                        log.warn(err);
+                        console.log(err);
                         done(new Error(err));
                         return;
                     }
-                    log.info("Add messsage " + messageId + " to check status queue");
+                    console.log("Add messsage " + messageId + " to check status queue");
                     addToCheckStatus(messageId, data);
                     // If there is a user_id, track status
                     if(data.user_id){
@@ -114,7 +114,7 @@ var sendSMS = function(data, done){
                 } else {
                     // Request failed
                     var msg = "Failed to send message: " + error;
-                    log.warn(response);
+                    console.log(response);
                     done(new Error(error));
                 }
             })
@@ -163,18 +163,18 @@ var checkStatus = function(data, done){
                 if(data.user_id){
                     changeAnalytics(data.user_id, data.mid, status);
                 }
-                log.info("Change message status to " + body);
+                console.log("Change message status to " + body);
 
                 // Job done
                 done();
             } else {
                 var msg = "Failed to check status: " + error;
-                log.warn(msg);
+                console.log(msg);
                 done(new Error(msg));
             }
         }).form(req_data);
 
-            log.info("Check status for message " + data.mid);
+            console.log("Check status for message " + data.mid);
     } else if(config.requestType === "soap"){
         var options = getSoapOptions("getRealMessageStatuses");
         var xml_data = new render();
@@ -185,12 +185,12 @@ var checkStatus = function(data, done){
                         var body_json = JSON.parse(parser.toJson(body));
                         var status = body_json["soapenv:Envelope"]["soapenv:Body"]["ns1:getRealMessageStatusesResponse"]["ns1:getRealMessageStatusesReturn"]["item"];
                     } catch(err){
-                        log.warn(err);
+                        console.log(err);
                         done(new Error(err));
                         return;
                     }
                     if(data.user_id){
-                        log.info("Change message status to " + status);
+                        console.log("Change message status to " + status);
                         changeAnalytics(data.user_id, data.mid, config.soap.statuses[status]);
                     }
                     if(status === 1 || status === 3){
@@ -201,7 +201,7 @@ var checkStatus = function(data, done){
                     }
                 } else {
                     var msg = "Failed to check status: " + error;
-                    log.warn(msg);
+                    console.log(msg);
                     done(new Error(msg));
                 }
             })
@@ -210,4 +210,4 @@ var checkStatus = function(data, done){
     }
 };
 
-log.info("Consumer started...");
+console.log("Consumer started...");
