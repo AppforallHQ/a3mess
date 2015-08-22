@@ -194,7 +194,7 @@ var checkStatus = function(data, done){
                         changeAnalytics(data.user_id, data.mid, config.soap.statuses[status]);
                     }
                     if(status === 1 || status === 3){
-                        done(new Error(config.soap.statuses(status)));
+                        done(new Error(config.soap.statuses[status]));
                     } else {
                         // Job done
                         done();
