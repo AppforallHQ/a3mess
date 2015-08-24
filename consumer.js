@@ -28,13 +28,14 @@ queue.process("check-status", function(job, done){
     checkStatus(job.data, done);
 });
 
-var addToCheckStatus = function(body, data){
+var addToCheckStatus = function(messageId, data){
     var msg_data = {
-        title: "SMS: " + body + " to: " + data.user_id + " with number: " + data.to,
-        mid: body,
+        title: "SMS: " + messageId + " to: " + data.user_id + " with number: " + data.to,
+        mid: messageId,
         user_id: data.user_id
     };
 
+    console.log("Add message " + messageId + " to checkStatus queue");
     queue.create("check-status", msg_data)
         .attempts(5)
         .delay(config.status_delay)
@@ -70,7 +71,6 @@ var sendSMS = function(data, done){
 
         req = request.post(endpoint, function(error, response, body){
             if(!error && response.statusCode === 200){
-                console.log("Add messsage " + body + " to check status queue");
                 addToCheckStatus(body, data);
 
                 // If there is a user_id, track status
@@ -103,11 +103,10 @@ var sendSMS = function(data, done){
                         done(new Error(err));
                         return;
                     }
-                    console.log("Add messsage " + messageId + " to check status queue");
                     addToCheckStatus(messageId, data);
                     // If there is a user_id, track status
                     if(data.user_id){
-                        changeAnalytics(data.user_id, messageId, "Message in queue");
+                        changeAnalytics(data.user_id, messageId, "در صف ارسال سیستم پیامک");
                     }
                     // Job done
                     done();
@@ -182,6 +181,9 @@ var checkStatus = function(data, done){
             .post(options, function(error, response, body){
                 if(!error && response.statusCode == 200){
                     try{
+                        console.log([data.mid]);
+                        console.log(xml_data.getRealMessageStatuses([data.mid]));
+                        console.log(body);
                         var body_json = JSON.parse(parser.toJson(body));
                         var status = body_json["soapenv:Envelope"]["soapenv:Body"]["ns1:getRealMessageStatusesResponse"]["ns1:getRealMessageStatusesReturn"]["item"];
                     } catch(err){
@@ -190,7 +192,7 @@ var checkStatus = function(data, done){
                         return;
                     }
                     if(data.user_id){
-                        console.log("Change message status to " + status);
+                        console.log("Change message " + data.mid + "'s status to " + status);
                         changeAnalytics(data.user_id, data.mid, config.soap.statuses[status]);
                     }
                     if(status === 1 || status === 3){
