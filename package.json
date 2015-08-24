@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org//a3mess.git"
+    "url": "git+ssh://git@bitbucket.org/PROJECT/a3mess.git"
   },
   "keywords": [
     "SMS",
@@ -16,7 +16,7 @@
   ],
   "author": "",
   "license": "ISC",
-  "homepage": "https://bitbucket.org//a3mess#readme",
+  "homepage": "https://bitbucket.org/PROJECT/a3mess#readme",
   "dependencies": {
     "analytics-node": "^1.2.2",
     "bunyan": "^1.4.0",

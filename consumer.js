@@ -181,9 +181,6 @@ var checkStatus = function(data, done){
             .post(options, function(error, response, body){
                 if(!error && response.statusCode == 200){
                     try{
-                        console.log([data.mid]);
-                        console.log(xml_data.getRealMessageStatuses([data.mid]));
-                        console.log(body);
                         var body_json = JSON.parse(parser.toJson(body));
                         var status = body_json["soapenv:Envelope"]["soapenv:Body"]["ns1:getRealMessageStatusesResponse"]["ns1:getRealMessageStatusesReturn"]["item"];
                     } catch(err){

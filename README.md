@@ -1,5 +1,5 @@
 # A3Mess
-A3mess (pronounce as `A se mess`) 's SMS handler API.
+A3mess (pronounce as `A se mess`) Project's SMS handler API.
 
 ## Installation
 

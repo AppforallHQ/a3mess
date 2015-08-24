@@ -34,7 +34,7 @@ app.get('/', function(req, res, next){
     };
 
     // Callback to handle job save process
-    console.log("Add message to queue:" + data);
+    console.log("Add message to queue:" + JSON.stringify(data));
     var save_sms = function(err){
         if(!err){
             res.send({done: true,
