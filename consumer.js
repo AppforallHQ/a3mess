@@ -195,7 +195,7 @@ var checkStatus = function(data, done){
                         console.log("Change message " + data.mid + "'s status to " + status);
                         changeAnalytics(data.user_id, data.mid, config.soap.statuses[status]);
                     }
-                    if(status === 1 || status === 3){
+                    if(status < 1 || status > 1){
                         done(new Error(config.soap.statuses[status]));
                     } else {
                         // Job done
