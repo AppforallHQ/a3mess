@@ -1,16 +1,17 @@
 var config = {};
 
+// USER Configuration
 config.segment_key = "";
+config.magfa = {domain: "magfa",
+                from: "",
+                username: "",
+                password: ""};
+
 
 // Which type of service have to be used? (soap or http)
 config.requestType = "soap";
 config.port = process.env.npm_package_config_port || 3883;
 config.ui_port = 38083;
-
-config.magfa = {domain: "magfa",
-                from: "",
-                username: "",
-                password: ""};
 
 config.http = {};
 config.http.endpoint = "http://sms.magfa.com/magfaHttpService";
