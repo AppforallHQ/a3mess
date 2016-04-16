@@ -2,7 +2,7 @@
 
 A3mess (pronounce as `A se mess`) is SMS delivery handler. Using
 [Magfa](http://messging.magfa.com) as messaging service provider, A3mess will
-provide you a RESTful API which abstracts Magfa's webservices and provide you a
+provide you a RESTful API which abstracts Magfa's webservices and provides you a
 request queue that checks delivery status for each message and retries to resend
 it in case of failure.
 
@@ -73,6 +73,11 @@ Type: POST
 
 Which will register the message in `body` for the receiver `to`. The `user_id`
 is an optional key which will be used to log the message status for user on [Segment](http://segment.com)
+
+#### Web interface
+
+Using kue as queue manager, it provides a web interface on port `38083` which
+will be useful to check the messaging queue status
 
 
 ## Deployment
